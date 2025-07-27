@@ -41,5 +41,4 @@
 *.dwo
 
 # rm dir
-.idea
-build
+build/
