@@ -7,52 +7,54 @@
 #include <pcl/common/transforms.h> // 点云坐标变换
 #include <pcl/visualization/pcl_visualizer.h>
 
-// This function displays the help
+
+// 展示help
 void showHelp(char *program_name)
 {
-    std::cout << std::endl;
-    std::cout << "Usage: " << program_name << " cloud_filename.[pcd|ply]" << std::endl;
-    std::cout << "-h:  Show this help." << std::endl;
+    std::cout << std::endl;     // 空行
+    std::cout << "Usage: " << program_name << " cloud_filename.[pcd|ply]" << std::endl; // 使用规范
+    std::cout << "-h:  Show this help." << std::endl;                                   // -h/--help
 }
+
 
 // This is the main function
 int main(int argc, char **argv)
 {
 
-    // Show help 展示帮助信息
+    // Show help 展示帮助信息。pcl::console::find_switch是判断argv命令行中是否有argument_name，返回bool值
     if (pcl::console::find_switch(argc, argv, "-h") || pcl::console::find_switch(argc, argv, "--help"))
     {
         showHelp(argv[0]);
         return 0;
     }
 
-    // Fetch point cloud filename in arguments | Works with PCD and PLY files
+    // 从命令行参数中提取一个 .ply 或 .pcd 文件名。
     std::vector<int> filenames;
-    bool file_is_pcd = false;
+    bool file_is_pcd = false;       // 默认提取ply文件，如果为pcd文件需要标志位标识
 
-    filenames = pcl::console::parse_file_extension_argument(argc, argv, ".ply");
+    filenames = pcl::console::parse_file_extension_argument(argc, argv, ".ply");        // 获取argv中所有ply文件
 
-    if (filenames.size() != 1)
+    if (filenames.size() != 1)      // ply文件需要一个，不是一个就去找pcd文件
     {
-        filenames = pcl::console::parse_file_extension_argument(argc, argv, ".pcd");
+        filenames = pcl::console::parse_file_extension_argument(argc, argv, ".pcd");    // 获取argv中所有pcd文件
 
-        if (filenames.size() != 1)
+        if (filenames.size() != 1)  // pcd文件需要一个，不是一个就报错
         {
-            showHelp(argv[0]);
-            return -1;
+            showHelp(argv[0]);      // argv[0]为可执行程序名称
+            return -1;              // 程序退出
         }
         else
         {
-            file_is_pcd = true;
+            file_is_pcd = true;     // 若确定为pcd文件，则pcd文件标志位标识
         }
     }
 
-    // Load file | Works with PCD and PLY files 在参数中寻找pcd或者ply文件
+    // 加载ply/pcd文件
     pcl::PointCloud<pcl::PointXYZ>::Ptr source_cloud(new pcl::PointCloud<pcl::PointXYZ>());
 
-    if (file_is_pcd)
+    if (file_is_pcd)        // 加载pcd文件
     {
-        if (pcl::io::loadPCDFile(argv[filenames[0]], *source_cloud) < 0)
+        if (pcl::io::loadPCDFile(argv[filenames[0]], *source_cloud) < 0) 
         {
             std::cout << "Error loading point cloud " << argv[filenames[0]] << std::endl
                       << std::endl;
@@ -60,7 +62,7 @@ int main(int argc, char **argv)
             return -1;
         }
     }
-    else
+    else                    // 加载ply文件
     {
         if (pcl::io::loadPLYFile(argv[filenames[0]], *source_cloud) < 0)
         {
