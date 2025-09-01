@@ -8,7 +8,7 @@
 #include <pcl/visualization/pcl_visualizer.h>
 
 
-// 展示help
+/* 1. show help 函数*/
 void showHelp(char *program_name)
 {
     std::cout << std::endl;     // 空行
