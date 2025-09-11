@@ -5,8 +5,7 @@
 #include <vector>
 #include <ctime>
 
-int
-main (int argc, char** argv)
+int main (int argc, char** argv)
 {
   srand (time (NULL));   //用系统时间初始化随机种子
   //创建一个PointCloud<pcl::PointXYZ>
